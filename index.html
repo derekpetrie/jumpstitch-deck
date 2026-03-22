@@ -728,9 +728,68 @@
           <p>Set up Shopify store (if not already). We wire up Hydrogen and start Week 1.</p>
         </div>
       </div>
-      <p style="color:var(--text-muted);margin-top:40px;font-size:15px;">
+      <p style="color:var(--text-muted);margin-top:32px;font-size:15px;">
         Built with love in Colorado. Designed for riders, by riders.
       </p>
+      <div style="margin-top:16px;">
+        <button onclick="show(13)" style="background:var(--rose);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;">Leave Feedback &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: Feedback Form -->
+  <div class="slide" data-slide="13">
+    <div class="slide-inner" style="text-align:center;">
+      <div class="tag tag-rose">Your Feedback</div>
+      <h2>What do you think, <span class="accent">Amanda</span>?</h2>
+      <p style="color:var(--text-muted);font-size:16px;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto;">Share any thoughts, concerns, or ideas. This goes directly to the build team.</p>
+
+      <form id="feedbackForm" action="https://formsubmit.co/ajax/derekpetrie@gmail.com" method="POST" style="max-width:560px;margin:0 auto;text-align:left;">
+        <div style="margin-bottom:20px;">
+          <label style="font-size:14px;font-weight:600;display:block;margin-bottom:6px;">What area is this about?</label>
+          <select name="area" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:15px;background:var(--surface);color:var(--text);font-family:inherit;appearance:auto;">
+            <option value="overall">Overall / General</option>
+            <option value="brand">Brand / Colors / Logo</option>
+            <option value="products">Products / Pricing / Catalog</option>
+            <option value="design-studio">Design Customizer Experience</option>
+            <option value="mobile">Mobile Experience</option>
+            <option value="timeline">Timeline / Priorities</option>
+            <option value="etsy-migration">Etsy Migration Plan</option>
+            <option value="other">Something Else</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:14px;font-weight:600;display:block;margin-bottom:6px;">Your feedback</label>
+          <textarea name="feedback" rows="5" placeholder="What looks good? What needs to change? Any concerns or ideas?" style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:8px;font-size:15px;background:var(--surface);color:var(--text);font-family:inherit;resize:vertical;" required></textarea>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:14px;font-weight:600;display:block;margin-bottom:6px;">How do you feel about V1 scope? <span style="color:var(--text-muted);font-weight:400;">(optional)</span></label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;background:var(--surface);">
+              <input type="radio" name="scope_feeling" value="perfect"> Looks right
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;background:var(--surface);">
+              <input type="radio" name="scope_feeling" value="too-much"> Too much for V1
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;background:var(--surface);">
+              <input type="radio" name="scope_feeling" value="missing"> Missing something
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;background:var(--surface);">
+              <input type="radio" name="scope_feeling" value="unsure"> Need to discuss
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" style="width:100%;padding:14px;background:var(--rose);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;">Send Feedback</button>
+      </form>
+
+      <div id="thankYou" style="display:none;margin-top:40px;">
+        <div style="font-size:48px;margin-bottom:16px;">&#10003;</div>
+        <h3 style="color:var(--mint-dark);">Feedback received!</h3>
+        <p style="color:var(--text-muted);font-size:15px;margin-top:8px;">Thanks Amanda. We'll review and follow up.</p>
+      </div>
     </div>
   </div>
 
@@ -765,6 +824,34 @@
   });
 
   show(0);
+
+  // Feedback form submission
+  document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+
+    const data = new FormData(form);
+    data.append('_subject', 'JumpStitch Deck Feedback: ' + data.get('area'));
+    data.append('_template', 'table');
+
+    fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(r => {
+      form.style.display = 'none';
+      document.getElementById('thankYou').style.display = 'block';
+    })
+    .catch(() => {
+      btn.textContent = 'Send Feedback';
+      btn.disabled = false;
+      alert('Something went wrong. Try again or text Derek directly.');
+    });
+  });
 </script>
 
 </body>
